@@ -15,18 +15,17 @@ require_relative 'sudoku'
 
 board_strings = File.readlines('sudoku_puzzles.txt')
 
-def run_game(board_string, i)
+def run_game(board_string, index)
   game = Sudoku.new(board_string.chomp)
-  puts 
-  puts "Puzzle# #{i + 1}:"
-  game.solve
+  puts
+  puts "Puzzle# #{index + 1}:"
   puts game
   puts
 end
 
 if ARGV.empty?
-  board_strings.each_with_index do | board_string, i |
-    run_game(board_string, i)
+  board_strings.each_with_index do | board_string, index |
+    run_game(board_string, index)
   end
 else
   selected_game = ARGV[0].to_i
