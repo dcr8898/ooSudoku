@@ -35,22 +35,28 @@ class Sudoku
           [57, 58, 59, 66, 67, 68, 75, 76, 77],
           [60, 61, 62, 69, 70, 71, 78, 79, 80]]
 
-  def initialize(board_string)
-    @board = Array.new(81) { "123456789" }
-    board_string.chars.each_with_index do |cell, index|
-debug(self, true)
-      if ('1'..'9').include?(cell)
-        return false unless @board[index].include?(cell)
-        @board[index] = cell
-        return false unless solve_cell(index)
-      end
+  def initialize(init_board)
+    if init_board.is_a?(Array)
+      @board = init_board.map { |e| e.dup }
+    else
+      return false unless board_loader(init_board)
     end
     solve
   end
 
-  def solve(solve_board = board)
-    return true if solved?(solve_board)
-
+  def solve(index = false)
+p "brute force"
+debug(self, true)
+    if index
+      return false unless solve_cell(index)
+    end
+    return valid? if solved?
+    working_cell = board.index { |cell| cell.size > 1 }
+    board[working_cell].chars.each do |prospect|
+      board[working_cell] = prospect
+      next_board = Sudoku.new(board)
+      next_board.solve(working_cell)
+    end
   end
 
   def to_s
@@ -62,29 +68,41 @@ debug(self, true)
 
   private
 
+  def board_loader(init_board)
+    @board = Array.new(81) { "123456789" }
+    init_board.chars.each_with_index do |cell, index|
+      if ('1'..'9').include?(cell)
+        return false unless @board[index].include?(cell)
+        @board[index] = cell
+        return false unless solve_cell(index)
+      end
+    end
+    true
+  end
+
   def solve_cell(solved_cell)
     solve_map = ROWS[solved_cell / 9] +
                 COLS[solved_cell % 9] +
                 SQRS[(solved_cell % 9 / 3) + 3 * (solved_cell / 9 / 3)]
-    solve_map.uniq!
-    solve_map.select { |index| board[index].size > 1 }.each do |target|
+    solve_map.map { |group| group.map { }}
+    solve_map.select { |index| board[index].size > 1 }.uniq.each do |target|
       board[target].delete!(board[solved_cell])
-      solve_cell(target) if board[target].size == 1
+      if board[target].size == 1
+        return false unless solve_cell(target)
+      end
       return false if board[target].empty?
     end
     true
   end
 
-  def solved?(check_board)
-    check_board.all? { |cell| cell.size == 1 }
+  def solved?
+    board.all? { |cell| cell.size == 1 }
   end
 
-  # def invalid?(check_board)
-  #   groups = (ROWS + COLS + SQS).map do |group|
-  #     group.map { |cell_index| check_board[cell_index] }.sort.join
-  #   end
-  #   groups.all? { |group| group == "123456789" }
-  # end
+  def valid?
+    groups = (ROWS + COLS + SQRS).map { |group| group.map { |cell| board[cell] } }
+    groups.all? { |group| group.sort.join == "123456789" }
+  end
 
   def debug(obj, pause = false)
     puts obj
