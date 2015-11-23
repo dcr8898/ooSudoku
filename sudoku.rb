@@ -45,8 +45,6 @@ class Sudoku
   end
 
   def solve(index = false)
-p "brute force"
-debug(self, true)
     if index
       return false unless solve_cell(index)
     end
@@ -84,7 +82,7 @@ debug(self, true)
     solve_map = ROWS[solved_cell / 9] +
                 COLS[solved_cell % 9] +
                 SQRS[(solved_cell % 9 / 3) + 3 * (solved_cell / 9 / 3)]
-    solve_map.map { |group| group.map { }}
+    solve_map.map { |group| group.map { } }
     solve_map.select { |index| board[index].size > 1 }.uniq.each do |target|
       board[target].delete!(board[solved_cell])
       if board[target].size == 1
@@ -95,13 +93,21 @@ debug(self, true)
     true
   end
 
-  def solved?
+  def solved?(board)
     board.all? { |cell| cell.size == 1 }
   end
 
-  def valid?
-    groups = (ROWS + COLS + SQRS).map { |group| group.map { |cell| board[cell] } }
+  def invalid?(board)
+    board.any? { |cell| cell.empty? }
+  end
+
+  def valid?(board)
+    groups = (ROWS + COLS + SQRS).map { |group| group.map { |index| board[index] } }
     groups.all? { |group| group.sort.join == "123456789" }
+  end
+
+  def deep_dup(board)
+    board.map { |cell| cell.dup }
   end
 
   def debug(obj, pause = false)
