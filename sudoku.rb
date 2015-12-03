@@ -36,11 +36,7 @@ class Sudoku
           [60, 61, 62, 69, 70, 71, 78, 79, 80]]
 
   def initialize(init_board)
-    if init_board.is_a?(Array)
-      @board = init_board.map { |e| e.dup }
-    else
-      return false unless board_loader(init_board)
-    end
+    board_loader(init_board)
     solve
   end
 
