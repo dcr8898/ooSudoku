@@ -75,8 +75,8 @@ class Sudoku
     solve_map = ROWS[solve_cell / 9] +
                 COLS[solve_cell % 9] +
                 SQRS[(solve_cell % 9 / 3) + 3 * (solve_cell / 9 / 3)]
-    solve_map.map { |group| group.map { |index| solve_board(index) } }
-    solve_map.select { |index| solve_board[index].size > 1 }.uniq.each do |target|
+    solve_map.flatten.select! { |index| solve_board[index].size > 1 }
+    solve_map.uniq.each do |target|
       solve_board[target].delete!(solve_value)
       if board[target].size == 1
         solve_cell(solve_board, target, solve_board(target))
