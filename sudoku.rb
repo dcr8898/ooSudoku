@@ -64,20 +64,17 @@ class Sudoku
 
   def board_loader(init_board)
     @board = Array.new(81) { "123456789" }
-    init_board.chars.each_with_index do |cell, index|
+    init_board.chars.each_with_index do |cell_value, index|
       if ('1'..'9').include?(cell)
-        return false unless @board[index].include?(cell)
-        @board[index] = cell
-        return false unless solve_cell(index)
+        @board = solve_cell(@board, index, cell_value)
       end
     end
-    true
   end
 
   def solve_cell(solve_board, solve_cell, solve_value)
-    solve_map = ROWS[solved_cell / 9] +
-                COLS[solved_cell % 9] +
-                SQRS[(solved_cell % 9 / 3) + 3 * (solved_cell / 9 / 3)]
+    solve_map = ROWS[solve_cell / 9] +
+                COLS[solve_cell % 9] +
+                SQRS[(solve_cell % 9 / 3) + 3 * (solve_cell / 9 / 3)]
     solve_map.map { |group| group.map { |index| solve_board(index) } }
     solve_map.select { |index| solve_board[index].size > 1 }.uniq.each do |target|
       solve_board[target].delete!(solve_value)
