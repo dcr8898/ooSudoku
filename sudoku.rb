@@ -65,7 +65,7 @@ class Sudoku
   def board_loader(init_board)
     @board = Array.new(81) { "123456789" }
     init_board.chars.each_with_index do |cell_value, index|
-      if ('1'..'9').include?(cell)
+      if ('1'..'9').include?(cell_value)
         @board = solve_cell(@board, index, cell_value)
       end
     end
@@ -79,9 +79,10 @@ class Sudoku
     solve_map.uniq.each do |target|
       solve_board[target].delete!(solve_value)
       if board[target].size == 1
-        solve_cell(solve_board, target, solve_board(target))
+        solve_cell(solve_board, target, solve_board[target])
       end
     end
+debug(solve_board, true)
     solve_board
   end
 
