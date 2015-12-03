@@ -74,19 +74,18 @@ class Sudoku
     true
   end
 
-  def solve_cell(solved_cell)
+  def solve_cell(solve_board, solve_cell, solve_value)
     solve_map = ROWS[solved_cell / 9] +
                 COLS[solved_cell % 9] +
                 SQRS[(solved_cell % 9 / 3) + 3 * (solved_cell / 9 / 3)]
-    solve_map.map { |group| group.map { } }
-    solve_map.select { |index| board[index].size > 1 }.uniq.each do |target|
-      board[target].delete!(board[solved_cell])
+    solve_map.map { |group| group.map { |index| solve_board(index) } }
+    solve_map.select { |index| solve_board[index].size > 1 }.uniq.each do |target|
+      solve_board[target].delete!(solve_value)
       if board[target].size == 1
-        return false unless solve_cell(target)
+        solve_cell(solve_board, target, solve_board(target))
       end
-      return false if board[target].empty?
     end
-    true
+    solve_board
   end
 
   def solved?(board)
