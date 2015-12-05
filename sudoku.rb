@@ -36,6 +36,7 @@ class Sudoku
           [60, 61, 62, 69, 70, 71, 78, 79, 80]]
 
   def initialize(init_board)
+    @board = Array.new(81) { "123456789" }
     board_loader(init_board)
     solve
   end
@@ -63,7 +64,6 @@ class Sudoku
   private
 
   def board_loader(init_board)
-    @board = Array.new(81) { "123456789" }
     init_board.chars.each_with_index do |cell_value, index|
       if ('1'..'9').include?(cell_value)
         @board = solve_cell(@board, index, cell_value)
@@ -75,7 +75,8 @@ class Sudoku
     solve_map = ROWS[solve_cell / 9] +
                 COLS[solve_cell % 9] +
                 SQRS[(solve_cell % 9 / 3) + 3 * (solve_cell / 9 / 3)]
-    solve_map.flatten.select! { |index| solve_board[index].size > 1 }
+    solve_map.flatten!
+    solve_map.select! { |index| solve_board[index].size > 1 }
     solve_map.uniq.each do |target|
       solve_board[target].delete!(solve_value)
       if board[target].size == 1
@@ -104,7 +105,7 @@ debug(solve_board, true)
   end
 
   def debug(obj, pause = false)
-    puts obj
+    p obj
     gets if pause
   end
 
