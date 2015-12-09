@@ -68,6 +68,7 @@ class Sudoku
       if ('1'..'9').include?(cell_value)
         @board = solve_cell(@board, index, cell_value)
       end
+debug(self, true)
     end
   end
 
@@ -75,7 +76,6 @@ class Sudoku
     solve_map = ROWS[solve_cell / 9] +
                 COLS[solve_cell % 9] +
                 SQRS[(solve_cell % 9 / 3) + 3 * (solve_cell / 9 / 3)]
-    solve_map.flatten!
     solve_map.select! { |index| solve_board[index].size > 1 }
     solve_map.uniq.each do |target|
       solve_board[target].delete!(solve_value)
@@ -83,7 +83,6 @@ class Sudoku
         solve_cell(solve_board, target, solve_board[target])
       end
     end
-debug(solve_board, true)
     solve_board
   end
 
@@ -105,7 +104,7 @@ debug(solve_board, true)
   end
 
   def debug(obj, pause = false)
-    p obj
+    puts obj
     gets if pause
   end
 
