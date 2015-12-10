@@ -64,6 +64,7 @@ class Sudoku
   private
 
   def board_loader(init_board)
+debug(self, true)
     init_board.chars.each_with_index do |cell_value, index|
       if ('1'..'9').include?(cell_value)
         @board = solve_cell(@board, index, cell_value)
@@ -73,14 +74,15 @@ debug(self, true)
   end
 
   def solve_cell(solve_board, solve_cell, solve_value)
+    solve_board[solve_cell] = solve_value
     solve_map = ROWS[solve_cell / 9] +
                 COLS[solve_cell % 9] +
                 SQRS[(solve_cell % 9 / 3) + 3 * (solve_cell / 9 / 3)]
     solve_map.select! { |index| solve_board[index].size > 1 }
-    solve_map.uniq.each do |target|
-      solve_board[target].delete!(solve_value)
-      if board[target].size == 1
-        solve_cell(solve_board, target, solve_board[target])
+    solve_map.uniq.each do |target_index|
+      solve_board[target_index].delete!(solve_value)
+      if solve_board[target_index].size == 1
+        solve_cell(solve_board, target_index, solve_board[target_index])
       end
     end
     solve_board
