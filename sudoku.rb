@@ -41,11 +41,12 @@ class Sudoku
     solve
   end
 
-  def solve(index = false)
-    if index
-      return false unless solve_cell(index)
+  def solve(board = @board)
+    if (board == false) || invalid?(board)
+      return false
+    elsif solved?(board) and valid?(board)
+      return board
     end
-    return valid? if solved?
     working_cell = board.index { |cell| cell.size > 1 }
     board[working_cell].chars.each do |prospect|
       board[working_cell] = prospect
@@ -64,12 +65,10 @@ class Sudoku
   private
 
   def board_loader(init_board)
-debug(self, true)
     init_board.chars.each_with_index do |cell_value, index|
       if ('1'..'9').include?(cell_value)
         @board = solve_cell(@board, index, cell_value)
       end
-debug(self, true)
     end
   end
 
