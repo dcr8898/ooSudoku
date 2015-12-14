@@ -42,16 +42,20 @@ class Sudoku
   end
 
   def solve(board = @board)
-    if (board == false) || invalid?(board)
+    if invalid?(board)
       return false
-    elsif solved?(board) and valid?(board)
+    elsif solved?(board) && valid?(board)
       return board
     end
     working_cell = board.index { |cell| cell.size > 1 }
     board[working_cell].chars.each do |prospect|
-      board[working_cell] = prospect
-      next_board = Sudoku.new(board)
-      next_board.solve(working_cell)
+      working_board = deep_dup(board)
+      result = solve(solve_cell(working_board, prospect,[working_cell))
+      if result
+        return result
+      else
+        return false
+      end
     end
   end
 
