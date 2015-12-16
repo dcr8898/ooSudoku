@@ -53,9 +53,8 @@ class Sudoku
       result = solve(solve_cell(working_board, prospect,[working_cell))
       if result
         return result
-      else
-        return false
       end
+      return false
     end
   end
 
