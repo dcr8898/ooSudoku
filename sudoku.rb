@@ -38,10 +38,10 @@ class Sudoku
   def initialize(init_board)
     @board = Array.new(81) { "123456789" }
     board_loader(init_board)
-    solve
+    @board = solve(@board)
   end
 
-  def solve(board = @board)
+  def solve(board)
     if invalid?(board)
       return false
     elsif solved?(board) && valid?(board)
@@ -54,8 +54,8 @@ class Sudoku
       if result
         return result
       end
-      return false
     end
+    return false
   end
 
   def to_s
