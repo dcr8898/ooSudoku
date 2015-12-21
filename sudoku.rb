@@ -50,7 +50,7 @@ class Sudoku
     working_cell = board.index { |cell| cell.size > 1 }
     board[working_cell].chars.each do |prospect|
       working_board = deep_dup(board)
-      result = solve(solve_cell(working_board, prospect,[working_cell))
+      result = solve(solve_cell(working_board, prospect, working_cell))
       if result
         return result
       end
