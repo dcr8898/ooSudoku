@@ -1,3 +1,4 @@
+require 'benchmark'
 require_relative 'sudoku'
 
 # The sudoku puzzles that your program will solve can be found
@@ -16,9 +17,11 @@ require_relative 'sudoku'
 board_strings = File.readlines('sudoku_puzzles.txt')
 
 def run_game(board_string, index)
-  game = Sudoku.new(board_string.chomp)
+  board_string.chomp!
+  time = Benchmark.realtime { Sudoku.new(board_string) }
+  game = Sudoku.new(board_string)
   puts
-  puts "Puzzle# #{index + 1}:"
+  puts "Puzzle# #{index + 1} (#{time} seconds):"
   puts game
   puts
 end
