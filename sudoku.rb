@@ -36,8 +36,7 @@ class Sudoku
           [60, 61, 62, 69, 70, 71, 78, 79, 80]]
 
   def initialize(init_board)
-    @board = Array.new(81) { "123456789" }
-    board_loader(init_board)
+    @board = board_loader(init_board, Array.new(81) { "123456789" })
     @board = solve(@board)
   end
 
@@ -67,12 +66,13 @@ class Sudoku
 
   private
 
-  def board_loader(init_board)
+  def board_loader(init_board, start_board)
     init_board.chars.each_with_index do |cell_value, index|
       if ('1'..'9').include?(cell_value)
-        @board = solve_cell(@board, index, cell_value)
+        start_board = solve_cell(start_board, index, cell_value)
       end
     end
+    start_board
   end
 
   def solve_cell(solve_board, solve_cell, solve_value)
